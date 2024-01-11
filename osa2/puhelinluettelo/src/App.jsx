@@ -6,7 +6,7 @@ import personService from './services/persons'
 import Notification from './components/Notification'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showPerson, setShowPerson] = useState('')
@@ -23,6 +23,7 @@ const App = () => {
 
   const deletePerson = (id) => {
     const person = persons.find(person => person.id === id)
+    
     personService
       .deleteObject(id)
       .then(response => {
@@ -98,6 +99,7 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 3000)
+        })
         .catch(error => {
           setErrorMessage(
             `Information of ${newName} has already been removed from server`
@@ -105,7 +107,6 @@ const App = () => {
           setTimeout(() => {
             setErrorMessage(null)
           }, 3000)
-        })
         })
       }
   }
@@ -148,13 +149,13 @@ const App = () => {
       <h2>Numbers</h2>
 
       <ul>
-        {personsToShow.map(person =>
-          <Person 
-            key={person.id} 
-            person={person}
-            deletePerson={deletePerson}
-          />
-        )}
+        {personsToShow.map(person => 
+            <Person
+              key={person.id}
+              person={person}
+              deletePerson={deletePerson}
+            />
+          )}
       </ul>
     </div>
   )
