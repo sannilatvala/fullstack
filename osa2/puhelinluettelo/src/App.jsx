@@ -27,7 +27,6 @@ const App = () => {
     personService
       .deleteObject(id)
       .then(response => {
-        console.log(`deleted ${id}`)
         setPersons(persons.filter(person => person.id !== id))
         setMessage(
           `Deleted ${person.name}`
@@ -45,6 +44,11 @@ const App = () => {
         }, 3000)
       })
   }
+
+  const isPhoneNumberValid = (phoneNumber) => {
+    const regex = /^[0-9]{2,3}-[0-9]+$/;
+    return regex.test(phoneNumber);
+  }  
 
   const addPerson = (event) => {
     const addNewNumber = () => {
@@ -67,12 +71,17 @@ const App = () => {
           }, 3000)
         })
         .catch(error => {
-          setErrorMessage(
-            `Information of ${existingPerson.name} has already been removed from server`
-          )
+          if (error.response && error.response.status === 400) {
+            const validationError = error.response.data.error
+            setErrorMessage(`Person validation failed: ${validationError}`)
+          } else if (error.response && error.response.status === 500) {
+            setErrorMessage('An unexpected server error occurred')
+          } else {
+            setErrorMessage('An unexpected error occurred')
+          }
           setTimeout(() => {
             setErrorMessage(null)
-          }, 3000)
+          }, 4000)
         })
       }
     }
@@ -101,14 +110,19 @@ const App = () => {
           }, 3000)
         })
         .catch(error => {
-          setErrorMessage(
-            `Information of ${newName} has already been removed from server`
-          )
+          if (error.response && error.response.status === 400) {
+            const validationError = error.response.data.error
+            setErrorMessage(`Person validation failed: ${validationError}`)
+          } else if (error.response && error.response.status === 500) {
+            setErrorMessage('An unexpected server error occurred')
+          } else {
+            setErrorMessage('An unexpected error occurred')
+          }
           setTimeout(() => {
             setErrorMessage(null)
-          }, 3000)
-        })
-      }
+          }, 4000)
+      })
+    }
   }
   
   const handlePersonChange = (event) => {
